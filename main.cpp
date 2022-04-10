@@ -4,33 +4,43 @@
 #include "wrapper/zstd.hpp"
 #include "wrapper/lz4.hpp"
 
-const int N = 100500;
+#include "bench/core.hpp" 
 
-const char * in;
-char out[N];
-char out2[N];
+#include <ostream>
+
+std::ostream & operator<<(std::ostream & os, const Stat & stat) {
+    os << "Verified: " << std::boolalpha << stat.verified << "\n";
+    os << "Input size(mb): " << (double) stat.src_size / (1.0 * 1024 * 1024) << "\n";
+    os << "Compressed size(mb): " << (double) stat.compressed_size / (1.0 * 1024 * 1024) << "\n";
+    os << "Compressed time(sec): " << stat.duration_comp_mics.count() / 1e6 << "\n";
+    os << "Decompressed time(sec): " << stat.duration_decomp_mics.count() / 1e6 << "\n"; 
+
+    return os;
+}
 
 int main() {
-    in = "kekkekkekaaaaaaaaaaaaaaaaaaaaaalolaaaaaaaaaaaaaa";
+    // in = "kekkekkekaaaaaaaaaaaaaaaaaaaaaalolaaaaaaaaaaaaaa";
 
-    printf(" Input: %s\n", in);
+    // printf(" Input: %s\n", in);
 
-    puts("==== TESTING LZ4 ====");
-
-
-    int s = lz4::compress(in, out, strlen(in) + 1, N, 2);
-
-    lz4::decompress(out, out2, s, N); // works wrong!! extra "aa" at the end
-    printf("decomp: %s\n", out2);
-
-    puts("==== TESTING ZSTD ====");
-
-    s = zstd::compress(in, out, strlen(in) + 1, N, 2);
-    zstd::decompress(out, out2, s, N);
-
-    printf("Result: %s\n", out2);
+    // puts("==== TESTING LZ4 ====");
 
 
+    // int s = lz4::compress(in, out, strlen(in) + 1, N, 2);
+
+    // lz4::decompress(out, out2, s, N); // works wrong!! extra "aa" at the end
+    // printf("decomp: %s\n", out2);
+
+    // puts("==== TESTING ZSTD ====");
+
+    // s = zstd::compress(in, out, strlen(in) + 1, N, 2);
+    // zstd::decompress(out, out2, s, N);
+
+    // printf("Result: %s\n", out2);
+
+    auto s = measure("source/mozilla", zstd::compress, zstd::decompress, 1);
+
+    std::cout << s;
 }
 
 // /* LZ4file API example : compress a file

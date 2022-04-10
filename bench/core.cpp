@@ -34,12 +34,13 @@ Stat measure(std::string fname, CompressFunc compress, DecompressFunc decompress
 
     OneShotTimer timer_decomp;
 
+    timer_decomp.begin();
+
     int decomp_size = decompress(compressed.data(), decompressed.data(), comp_size, size);
 
     timer_decomp.end();
 
     // verify
-
     bool ok = true;
     ok &= static_cast<std::size_t>(decomp_size) == size;
     if (ok) {
