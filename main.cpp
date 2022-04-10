@@ -7,6 +7,8 @@
 #include "bench/core.hpp"
 
 #include <ostream>
+#include <vector>
+#include <string>
 
 std::ostream &operator<<(std::ostream &os, const Stat &stat)
 {
@@ -19,14 +21,45 @@ std::ostream &operator<<(std::ostream &os, const Stat &stat)
     return os;
 }
 
+std::vector<std::string> test_files =
+  {
+      "dickens"
+    , "mozilla"
+    , "mr"
+    , "nci"
+    , "ooffice"
+    , "osdb"
+    , "reymont"
+    , "samba"
+    , "sao"
+    , "webster"
+    , "xml"
+    , "x-ray"
+  };
+
+void run_tests() {
+    for (auto file_name : test_files) {
+        std::cout << "testing " << file_name << "..." << std::endl;
+
+        auto s =  measure("source/" + file_name, zstd::compress, zstd::decompress, 1);
+        std::cout << "=== ZSTD COMPRESSION LEVEL MIN ===\n"
+              << s;
+
+        s =  measure("source/" + file_name, zstd::compress, zstd::decompress, 7);
+        std::cout << "=== ZSTD COMPRESSION LEVEL MAX ===\n"
+              << s;
+
+        s =  measure("source/" + file_name, lz4::compress, lz4::decompress, LZ4_COMPRESS_MAX);
+        std::cout << "===  LZ4 COMPRESSION LEVEL MAX ===\n"
+              << s;
+
+        std::cout << std::endl << std::endl;
+    }
+}
+
+
 int main()
 {
 
-    auto s = measure("source/mozilla", zstd::compress, zstd::decompress, 1);
-    std::cout << "=== ZSTD ===\n"
-              << s;
-
-    s = measure("source/mozilla", lz4::compress, lz4::decompress, LZ4_COMPRESS_MAX);
-    std::cout << "=== LZ4 ===\n"
-              << s;
+    run_tests();
 }

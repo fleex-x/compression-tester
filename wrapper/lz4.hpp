@@ -3,8 +3,8 @@
 #define LZ4_ACCELERATION_DEFAULT 1 // defined in ../lz4/lz4.c
 #define LZ4_ACCELERATION_MAX 65537 // defined in ../lz4/lz4.c
 
-#define LZ4_COMPRESS_MIN 1 // defined in ../lz4/lz4.c
-#define LZ4_COMPRESS_MAX 65537 // defined in ../lz4/lz4.c
+#define LZ4_COMPRESS_MIN 1
+#define LZ4_COMPRESS_MAX 65537
 
 namespace lz4 {
 
