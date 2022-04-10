@@ -2,9 +2,11 @@
 #include "fileholder.hpp"
 #include "timer.hpp"
 #include <iostream>
+#include <unordered_map>
 
 Stat measure(std::string fname, CompressFunc compress, DecompressFunc decompress, int compr_level)
 {
+
     FileHolder fh;
     try
     {
