@@ -1,42 +1,284 @@
-#include "lz4/lz4.h"
-#include "zstd/zstd.h"
+// #include "lz4/lz4.h"
+// #include "zstd/zstd.h"
 
-#include <iostream>
-#include <cstring>
+// #include <iostream>
+// #include <cstring>
 
-const int N = 100500;
+// const int N = 100500;
 
-const char * in;
-char out[N];
-char out2[N];
+// const char * in;
+// char out[N];
+// char out2[N];
 
-ZSTDLIB_API size_t ZSTD_compress( void* dst, size_t dstCapacity,
-                            const void* src, size_t srcSize,
-                                  int compressionLevel);
+// ZSTDLIB_API size_t ZSTD_compress( void* dst, size_t dstCapacity,
+//                             const void* src, size_t srcSize,
+//                                   int compressionLevel);
 
-ZSTDLIB_API size_t ZSTD_decompress( void* dst, size_t dstCapacity,
-                              const void* src, size_t compressedSize);
+// ZSTDLIB_API size_t ZSTD_decompress( void* dst, size_t dstCapacity,
+//                               const void* src, size_t compressedSize);
 
-int main() {
-    in = "baaaaaaaaaaaaaaaaaaaaabbaaaaaaalolaaa";
-    int s = LZ4_compress_fast(in, out, strlen(in), 1000, 2);
-    char * ptr = out;
-    int cnt = 0;
-    while (*ptr != 0 || cnt < 10) {
-        printf("%d\n", (int)*ptr);
-        ++ptr;
-        ++cnt;
+// int main() {
+    
+//     in = "kekkekkekaaaaaaa";
+
+//     printf("Input: %s\n", in);
+
+//     puts("==== TESTING LZ4 ====");
+
+
+//     int s = LZ4_compress_fast(in, out, strlen(in), N, 2);
+
+//     LZ4_decompress_safe(out, out2, s, N); // works wrong!! extra "aa" at the end
+//     printf("decomp: %s\n", out2);
+
+//     puts("==== TESTING ZSTD ====");
+
+//     s = ZSTD_compress(out, N, in, strlen(in), 2);
+//     ZSTD_decompress(out2, N, out, s);
+
+//     printf("Result: %s\n", out2);
+
+
+// }
+
+/* LZ4file API example : compress a file
+ * Modified from an example code by anjiahao
+ *
+ * This example will demonstrate how 
+ * to manipulate lz4 compressed files like
+ * normal files */
+
+#include <assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+
+#include "lz4/lz4file.h"
+#include "bench/timer.hpp"
+
+#define CHUNK_SIZE (16*1024)
+
+static size_t get_file_size(char *filename)
+{
+    struct stat statbuf;
+
+    if (filename == NULL) {
+        return 0;
     }
 
-    LZ4_decompress_safe(out, out2, s, N); // works wrong!! extra "aa" at the end
-    printf("decomp: %s\n", out2);
+    if(stat(filename,&statbuf)) {
+        return 0;
+    }
 
-    puts("==== TESTING ZSTD ====");
+    return statbuf.st_size;
+}
 
-    s = ZSTD_compress(out, N, in, strlen(in), 2);
-    ZSTD_decompress(out2, N, out, s);
+static int compress_file(FILE* f_in, FILE* f_out)
+{
+    assert(f_in != NULL); assert(f_out != NULL);
 
-    printf("Result: %s\n", out2);
+    LZ4F_errorCode_t ret = LZ4F_OK_NoError;
+    size_t len;
+    LZ4_writeFile_t* lz4fWrite;
+    void* const buf = malloc(CHUNK_SIZE);
+    if (!buf) {
+        printf("error: memory allocation failed \n");
+    }
+
+    /* Of course, you can also use prefsPtr to
+     * set the parameters of the compressed file
+     * NULL is use default
+     */
+    ret = LZ4F_writeOpen(&lz4fWrite, f_out, NULL);
+    if (LZ4F_isError(ret)) {
+        printf("LZ4F_writeOpen error: %s\n", LZ4F_getErrorName(ret));
+        free(buf);
+        return 1;
+    }
+
+    while (1) {
+        len = fread(buf, 1, CHUNK_SIZE, f_in);
+
+        if (ferror(f_in)) {
+            printf("fread error\n");
+            goto out;
+        }
+
+        /* nothing to read */
+        if (len == 0) {
+            break;
+        }
+
+        ret = LZ4F_write(lz4fWrite, buf, len);
+        if (LZ4F_isError(ret)) {
+            printf("LZ4F_write: %s\n", LZ4F_getErrorName(ret));
+            goto out;
+        }
+    }
+
+out:
+    free(buf);
+    if (LZ4F_isError(LZ4F_writeClose(lz4fWrite))) {
+        printf("LZ4F_writeClose: %s\n", LZ4F_getErrorName(ret));
+        return 1;
+    }
+
+    return 0;
+}
+
+static int decompress_file(FILE* f_in, FILE* f_out)
+{
+    assert(f_in != NULL); assert(f_out != NULL);
+
+    LZ4F_errorCode_t ret = LZ4F_OK_NoError;
+    LZ4_readFile_t* lz4fRead;
+    void* const buf= malloc(CHUNK_SIZE);
+    if (!buf) {
+        printf("error: memory allocation failed \n");
+    }
+
+    ret = LZ4F_readOpen(&lz4fRead, f_in);
+    if (LZ4F_isError(ret)) {
+        printf("LZ4F_readOpen error: %s\n", LZ4F_getErrorName(ret));
+        free(buf);
+        return 1;
+    }
+
+    while (1) {
+        ret = LZ4F_read(lz4fRead, buf, CHUNK_SIZE);
+        if (LZ4F_isError(ret)) {
+            printf("LZ4F_read error: %s\n", LZ4F_getErrorName(ret));
+            goto out;
+        }
+
+        /* nothing to read */
+        if (ret == 0) {
+            break;
+        }
+
+        if(fwrite(buf, 1, ret, f_out) != ret) {
+            printf("write error!\n");
+            goto out;
+        }
+    }
+
+out:
+    free(buf);
+    if (LZ4F_isError(LZ4F_readClose(lz4fRead))) {
+        printf("LZ4F_readClose: %s\n", LZ4F_getErrorName(ret));
+        return 1;
+    }
+
+    if (ret) {
+        return 1;
+    }
+
+    return 0;
+}
+
+int compareFiles(FILE* fp0, FILE* fp1)
+{
+    int result = 0;
+
+    while (result==0) {
+        char b0[1024];
+        char b1[1024];
+        size_t const r0 = fread(b0, 1, sizeof(b0), fp0);
+        size_t const r1 = fread(b1, 1, sizeof(b1), fp1);
+
+        result = (r0 != r1);
+        if (!r0 || !r1) break;
+        if (!result) result = memcmp(b0, b1, r0);
+    }
+
+    return result;
+}
+
+int main(int argc, const char **argv) {
+
+    OneShotTimer timer;
+    timer.begin();
+
+    char inpFilename[256] = { 0 };
+    char lz4Filename[256] = { 0 };
+    char decFilename[256] = { 0 };
+
+    if (argc < 2) {
+        printf("Please specify input filename\n");
+        return 0;
+    }
+
+    snprintf(inpFilename, 256, "%s", argv[1]);
+    snprintf(lz4Filename, 256, "%s.lz4", argv[1]);
+    snprintf(decFilename, 256, "%s.lz4.dec", argv[1]);
+
+    printf("inp = [%s]\n", inpFilename);
+    printf("lz4 = [%s]\n", lz4Filename);
+    printf("dec = [%s]\n", decFilename);
+
+    /* compress */
+    {   FILE* const inpFp = fopen(inpFilename, "rb");
+        FILE* const outFp = fopen(lz4Filename, "wb");
+        printf("compress : %s -> %s\n", inpFilename, lz4Filename);
+        LZ4F_errorCode_t ret = compress_file(inpFp, outFp);
+        fclose(inpFp);
+        fclose(outFp);
+
+        if (ret) {
+            printf("compression error: %s\n", LZ4F_getErrorName(ret));
+            return 1;
+        }
+
+        printf("%s: %zu → %zu bytes, %.1f%%\n",
+            inpFilename,
+            get_file_size(inpFilename),
+            get_file_size(lz4Filename), /* might overflow is size_t is 32 bits and size_{in,out} > 4 GB */
+            (double)get_file_size(lz4Filename) / get_file_size(inpFilename) * 100);
+
+        printf("compress : done\n");
+    }
+
+    /* decompress */
+    {
+        FILE* const inpFp = fopen(lz4Filename, "rb");
+        FILE* const outFp = fopen(decFilename, "wb");
+
+        printf("decompress : %s -> %s\n", lz4Filename, decFilename);
+        LZ4F_errorCode_t ret = decompress_file(inpFp, outFp);
+
+        fclose(outFp);
+        fclose(inpFp);
+
+        if (ret) {
+            printf("compression error: %s\n", LZ4F_getErrorName(ret));
+            return 1;
+        }
+
+        printf("decompress : done\n");
+    }
+
+    /* verify */
+    {   FILE* const inpFp = fopen(inpFilename, "rb");
+        FILE* const decFp = fopen(decFilename, "rb");
+
+        printf("verify : %s <-> %s\n", inpFilename, decFilename);
+        int const cmp = compareFiles(inpFp, decFp);
+
+        fclose(decFp);
+        fclose(inpFp);
+
+        if (cmp) {
+            printf("corruption detected : decompressed file differs from original\n");
+            return cmp;
+        }
+
+        printf("verify : OK\n");
+    }
+    timer.end();
+
+    printf("Main works(ns): %ld\n", (long)timer.ns().count());
+    printf("Main works(mics): %ld", (long)timer.mics().count());
 
 
 }
