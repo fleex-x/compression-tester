@@ -3,6 +3,8 @@
 #include <string>
 
 using CompressFunc = int (*) (const char * src, char * dst, int src_size, int dst_size, int compression_level);
+using DecompressFunc = int (*) (const char * src, char * dst, int src_size, int dst_size, int compression_level);
+
 
 // assume file size < 4GiB
 struct Stat {
@@ -12,4 +14,4 @@ struct Stat {
     bool verified;
 };
 
-Stat measure(std::string fname);
+Stat measure(std::string fname, CompressFunc compress, DecompressFunc decompress);
