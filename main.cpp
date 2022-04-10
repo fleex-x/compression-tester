@@ -1,21 +1,14 @@
-#include "lz4/lz4.h"
-#include "zstd/zstd.h"
-
 #include <iostream>
 #include <cstring>
+
+#include "wrapper/zstd.hpp"
+#include "wrapper/lz4.hpp"
 
 const int N = 100500;
 
 const char * in;
 char out[N];
 char out2[N];
-
-ZSTDLIB_API size_t ZSTD_compress( void* dst, size_t dstCapacity,
-                            const void* src, size_t srcSize,
-                                  int compressionLevel);
-
-ZSTDLIB_API size_t ZSTD_decompress( void* dst, size_t dstCapacity,
-                              const void* src, size_t compressedSize);
 
 int main() {
     in = "kekkekkekaaaaaaaaaaaaaaaaaaaaaalolaaaaaaaaaaaaaa";
@@ -25,15 +18,15 @@ int main() {
     puts("==== TESTING LZ4 ====");
 
 
-    int s = LZ4_compress_fast(in, out, strlen(in) + 1, N, 2);
+    int s = lz4::compress(in, out, strlen(in) + 1, N, 2);
 
-    LZ4_decompress_safe(out, out2, s, N); // works wrong!! extra "aa" at the end
+    lz4::decompress(out, out2, s, N); // works wrong!! extra "aa" at the end
     printf("decomp: %s\n", out2);
 
     puts("==== TESTING ZSTD ====");
 
-    s = ZSTD_compress(out, N, in, strlen(in) + 1, 2);
-    ZSTD_decompress(out2, N, out, s);
+    s = zstd::compress(in, out, strlen(in) + 1, N, 2);
+    zstd::decompress(out, out2, s, N);
 
     printf("Result: %s\n", out2);
 

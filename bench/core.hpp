@@ -3,7 +3,7 @@
 #include <string>
 
 using CompressFunc = int (*) (const char * src, char * dst, int src_size, int dst_size, int compression_level);
-using DecompressFunc = int (*) (const char * src, char * dst, int src_size, int dst_size, int compression_level);
+using DecompressFunc = int (*) (const char * src, char * dst, int compressed_size, int dst_size);
 
 
 // assume file size < 4GiB
