@@ -18,4 +18,6 @@ file(GLOB bench "bench/*.hpp" "bench/*.cpp")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -pedantic") # TODO add -Werror
 
+set_property(SOURCE zstd/decompress/huf_decompress_amd64.S PROPERTY LANGUAGE C)
+
 add_executable(main main.cpp ${lz4} ${zstd} ${bench} zstd/zstd.h)
