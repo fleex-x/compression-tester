@@ -1,0 +1,242 @@
+{
+  "dickens": {
+    "lz4-compress-max": {
+      "comp-size": "6.130926",
+      "comp-time": "0.142564",
+      "decomp-time": "0.018541",
+      "orig-size": "9.720274"
+    },
+    "zstd-comp-1": {
+      "comp-size": "4.064306",
+      "comp-time": "0.312965",
+      "decomp-time": "0.072432",
+      "orig-size": "9.720274"
+    },
+    "zstd-comp-7": {
+      "comp-size": "3.183977",
+      "comp-time": "1.279369",
+      "decomp-time": "0.167261",
+      "orig-size": "9.720274"
+    }
+  },
+  "mozilla": {
+    "lz4-compress-max": {
+      "comp-size": "25.211017",
+      "comp-time": "0.568953",
+      "decomp-time": "0.083258",
+      "orig-size": "48.847656"
+    },
+    "zstd-comp-1": {
+      "comp-size": "19.176118",
+      "comp-time": "1.081803",
+      "decomp-time": "0.286199",
+      "orig-size": "48.847656"
+    },
+    "zstd-comp-7": {
+      "comp-size": "16.417393",
+      "comp-time": "5.355473",
+      "decomp-time": "0.398809",
+      "orig-size": "48.847656"
+    }
+  },
+  "mr": {
+    "lz4-compress-max": {
+      "comp-size": "5.188882",
+      "comp-time": "0.103404",
+      "decomp-time": "0.013342",
+      "orig-size": "9.508671"
+    },
+    "zstd-comp-1": {
+      "comp-size": "3.644588",
+      "comp-time": "0.237208",
+      "decomp-time": "0.049779",
+      "orig-size": "9.508671"
+    },
+    "zstd-comp-7": {
+      "comp-size": "3.190353",
+      "comp-time": "1.594125",
+      "decomp-time": "0.110098",
+      "orig-size": "9.508671"
+    }
+  },
+  "nci": {
+    "lz4-compress-max": {
+      "comp-size": "5.276718",
+      "comp-time": "0.144073",
+      "decomp-time": "0.038911",
+      "orig-size": "31.999059"
+    },
+    "zstd-comp-1": {
+      "comp-size": "2.716658",
+      "comp-time": "0.268650",
+      "decomp-time": "0.124122",
+      "orig-size": "31.999059"
+    },
+    "zstd-comp-7": {
+      "comp-size": "2.236083",
+      "comp-time": "1.584662",
+      "decomp-time": "0.121393",
+      "orig-size": "31.999059"
+    }
+  },
+  "ooffice": {
+    "lz4-compress-max": {
+      "comp-size": "4.137915",
+      "comp-time": "0.093697",
+      "decomp-time": "0.008800",
+      "orig-size": "5.867188"
+    },
+    "zstd-comp-1": {
+      "comp-size": "3.438984",
+      "comp-time": "0.191071",
+      "decomp-time": "0.030653",
+      "orig-size": "5.867188"
+    },
+    "zstd-comp-7": {
+      "comp-size": "2.770528",
+      "comp-time": "0.581331",
+      "decomp-time": "0.058416",
+      "orig-size": "5.867188"
+    }
+  },
+  "osdb": {
+    "lz4-compress-max": {
+      "comp-size": "5.013147",
+      "comp-time": "0.126110",
+      "decomp-time": "0.014148",
+      "orig-size": "9.618458"
+    },
+    "zstd-comp-1": {
+      "comp-size": "3.557033",
+      "comp-time": "0.223717",
+      "decomp-time": "0.058992",
+      "orig-size": "9.618458"
+    },
+    "zstd-comp-7": {
+      "comp-size": "3.195829",
+      "comp-time": "0.850853",
+      "decomp-time": "0.060914",
+      "orig-size": "9.618458"
+    }
+  },
+  "reymont": {
+    "lz4-compress-max": {
+      "comp-size": "3.034007",
+      "comp-time": "0.073413",
+      "decomp-time": "0.013983",
+      "orig-size": "6.320192"
+    },
+    "zstd-comp-1": {
+      "comp-size": "2.048416",
+      "comp-time": "0.153971",
+      "decomp-time": "0.056470",
+      "orig-size": "6.320192"
+    },
+    "zstd-comp-7": {
+      "comp-size": "1.633628",
+      "comp-time": "0.650160",
+      "decomp-time": "0.064620",
+      "orig-size": "6.320192"
+    }
+  },
+  "samba": {
+    "lz4-compress-max": {
+      "comp-size": "7.359351",
+      "comp-time": "0.155733",
+      "decomp-time": "0.027803",
+      "orig-size": "20.605469"
+    },
+    "zstd-comp-1": {
+      "comp-size": "5.249508",
+      "comp-time": "0.385550",
+      "decomp-time": "0.133423",
+      "orig-size": "20.605469"
+    },
+    "zstd-comp-7": {
+      "comp-size": "4.312876",
+      "comp-time": "1.427323",
+      "decomp-time": "0.119369",
+      "orig-size": "20.605469"
+    }
+  },
+  "sao": {
+    "lz4-compress-max": {
+      "comp-size": "6.475709",
+      "comp-time": "0.141502",
+      "decomp-time": "0.008144",
+      "orig-size": "6.915993"
+    },
+    "zstd-comp-1": {
+      "comp-size": "5.962173",
+      "comp-time": "0.268510",
+      "decomp-time": "0.024902",
+      "orig-size": "6.915993"
+    },
+    "zstd-comp-7": {
+      "comp-size": "4.987061",
+      "comp-time": "0.869208",
+      "decomp-time": "0.062612",
+      "orig-size": "6.915993"
+    }
+  },
+  "webster": {
+    "lz4-compress-max": {
+      "comp-size": "19.206989",
+      "comp-time": "0.498191",
+      "decomp-time": "0.070734",
+      "orig-size": "39.538100"
+    },
+    "zstd-comp-1": {
+      "comp-size": "13.029253",
+      "comp-time": "1.113190",
+      "decomp-time": "0.285687",
+      "orig-size": "39.538100"
+    },
+    "zstd-comp-7": {
+      "comp-size": "10.044908",
+      "comp-time": "4.100982",
+      "decomp-time": "0.370269",
+      "orig-size": "39.538100"
+    }
+  },
+  "x-ray": {
+    "lz4-compress-max": {
+      "comp-size": "8.001513",
+      "comp-time": "0.053969",
+      "decomp-time": "0.003386",
+      "orig-size": "8.081665"
+    },
+    "zstd-comp-1": {
+      "comp-size": "6.457781",
+      "comp-time": "0.156948",
+      "decomp-time": "0.009531",
+      "orig-size": "8.081665"
+    },
+    "zstd-comp-7": {
+      "comp-size": "5.172793",
+      "comp-time": "0.935834",
+      "decomp-time": "0.122157",
+      "orig-size": "8.081665"
+    }
+  },
+  "xml": {
+    "lz4-compress-max": {
+      "comp-size": "1.170630",
+      "comp-time": "0.029358",
+      "decomp-time": "0.006544",
+      "orig-size": "5.097656"
+    },
+    "zstd-comp-1": {
+      "comp-size": "0.664818",
+      "comp-time": "0.063036",
+      "decomp-time": "0.021725",
+      "orig-size": "5.097656"
+    },
+    "zstd-comp-7": {
+      "comp-size": "0.506918",
+      "comp-time": "0.265110",
+      "decomp-time": "0.019316",
+      "orig-size": "5.097656"
+    }
+  }
+}
