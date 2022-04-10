@@ -7,6 +7,7 @@
 
 struct FileHolder
 {
+    FileHolder() = default;
 
     FileHolder(std::string fname) : storage_(), fname_(std::move(fname))
     {
