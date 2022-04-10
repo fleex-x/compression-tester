@@ -72,8 +72,13 @@ def draw_charts(get_info, step, title, ylabel):
 def get_time(json_obj):
     return float(json_obj["comp-time"])
 
+def get_decomp_time(json_obj):
+    return float(json_obj["decomp-time"])
+
+
 def get_сompression_coeff(json_obj):
     return float(json_obj["orig-size"]) / float(json_obj["comp-size"])
 
-draw_charts(get_time, 0.25, 'Archivers speed', 'time (seconds)')
-draw_charts(get_сompression_coeff, 0.5, 'Archivers compression', 'coeff')
+draw_charts(get_decomp_time, 0.05, 'Archivers decompression speed', 'time (seconds)')
+# draw_charts(get_time, 0.25, 'Archivers speed', 'time (seconds)')
+# draw_charts(get_сompression_coeff, 0.5, 'Archivers compression', 'coeff')
