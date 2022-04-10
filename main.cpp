@@ -1,10 +1,12 @@
 #include <iostream>
 #include <cstring>
+#include <fstream>
 
 #include "wrapper/zstd.hpp"
 #include "wrapper/lz4.hpp"
 
 #include "bench/core.hpp"
+#include "directory/collector.cpp"
 
 #include <ostream>
 #include <vector>
@@ -38,28 +40,26 @@ std::vector<std::string> test_files =
   };
 
 void run_tests() {
+    std::ofstream file("info.json");
+
+    JsonBuilder JB;
     for (auto file_name : test_files) {
-        std::cout << "testing " << file_name << "..." << std::endl;
 
         auto s =  measure("source/" + file_name, zstd::compress, zstd::decompress, 1);
-        std::cout << "=== ZSTD COMPRESSION LEVEL MIN ===\n"
-              << s;
+        JB.addInfo(s, "zstd-comp-1", file_name);
 
         s =  measure("source/" + file_name, zstd::compress, zstd::decompress, 7);
-        std::cout << "=== ZSTD COMPRESSION LEVEL MAX ===\n"
-              << s;
+        JB.addInfo(s, "zstd-comp-7", file_name);
 
         s =  measure("source/" + file_name, lz4::compress, lz4::decompress, LZ4_COMPRESS_MAX);
-        std::cout << "===  LZ4 COMPRESSION LEVEL MAX ===\n"
-              << s;
+        JB.addInfo(s, "lz4-compress-max", file_name);
 
-        std::cout << std::endl << std::endl;
     }
+    file << std::setw(2) << JB.get() << std::endl;
+    file.close();
 }
 
 
-int main()
-{
-
+int main() {
     run_tests();
 }

@@ -6,45 +6,26 @@
 class JsonBuilder {
 private:
     nlohmann::json file;
-    enum {
-        EMPTY,
-        TIME,
-        COMP
-    } type;
 
 public:
-    void addTimeInfo(const Stat &stat, std::string &funcName, std::string sourceName, int level) {
-        if (stat.verified) {
+    void addInfo(const Stat &stat, const std::string &funcName, std::string &sourceName) {
+        if (!stat.verified) {
             std::cerr << "Non-verified compression" << std::endl;
         }
-        if (type == EMPTY || type == TIME) {
-            file[sourceName] = {{"func-name",   funcName},
-                                {"comp-level",  level},
-                                {"comp-time",   std::to_string(stat.duration_comp_mics.count())},
-                                {"decomp-time", std::to_string(stat.duration_decomp_mics.count())}};
-            type = TIME;
-        } else {
-            std::cerr << "Wrong json object";
-        }
-    }
-
-
-    void addCompInfo(const Stat &stat, std::string &funcName, std::string sourceName, int level) {
-        if (stat.verified) {
-            std::cerr << "Non-verified compression" << std::endl;
-        }
-        if (type == EMPTY || type == COMP) {
-            file[sourceName] = {{"func-name",  funcName},
-                                {"comp-level", level},
-                                {"orig-size",  std::to_string(stat.src_size)},
-                                {"comp-size",  std::to_string(stat.compressed_size)}};
-            type = COMP;
-        } else {
-            std::cerr << "Wrong json object";
-        }
+        file[sourceName][funcName].push_back(
+                {"comp-time", std::to_string((double) stat.duration_comp_mics.count() / 1e6)});
+        file[sourceName][funcName].push_back(
+                {"decomp-time", std::to_string((double) stat.duration_decomp_mics.count() / 1e6)});
+        file[sourceName][funcName].push_back(
+                {"orig-size", std::to_string((double) stat.src_size / (1.0 * 1024 * 1024))});
+        file[sourceName][funcName].push_back({"comp-size", std::to_string(
+                (double) stat.compressed_size / (1.0 * 1024 * 1024))});
     }
 
     nlohmann::json get() {
-        return file;
+        auto ret_file = file;
+        file.clear();
+        return ret_file;
     }
+
 };
